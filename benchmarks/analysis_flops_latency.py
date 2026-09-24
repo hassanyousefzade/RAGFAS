@@ -50,6 +50,19 @@ N_WARMUP = 30
 N_ITER = 200
 
 
+def _ensure_import(module_name: str, pip_name: str | None = None) -> None:
+    """Import a module, pip-installing it first if missing (Colab-friendly)."""
+    try:
+        __import__(module_name)
+    except ImportError:
+        import subprocess
+        import sys
+        pkg = pip_name or module_name
+        print(f"[setup] installing {pkg} ...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", pkg])
+        __import__(module_name)
+
+
 # ======================= inline model (1:1 with the repo) ==================
 class RandomNodeDropout(nn.Module):
     def __init__(self, drop_prob=0.3):
@@ -388,6 +401,10 @@ def main():
     print("=" * 76)
     print(f"RAGFAS efficiency analysis | device: {dev_name} | torch {torch.__version__}")
     print("=" * 76)
+
+    # lazily pip-install whatever the Colab image is missing
+    _ensure_import("torch_geometric")
+    _ensure_import("mediapipe")
 
     # ------------------------- MediaPipe + image -------------------------
     import mediapipe as mp
