@@ -408,15 +408,19 @@ def main():
 
     # ------------------------- MediaPipe + image -------------------------
     import mediapipe as mp
+    image_rgb = None
     if args.image:
         import cv2
         img = cv2.imread(args.image)
-        assert img is not None, f"cannot read {args.image}"
-        image_rgb = cv2.resize(cv2.cvtColor(img, cv2.COLOR_BGR2RGB), (FACE, FACE))
-    else:
+        if img is None:
+            print(f"WARNING: cannot read {args.image!r} (missing file?) - "
+                  "falling back to a synthetic image.")
+        else:
+            image_rgb = cv2.resize(cv2.cvtColor(img, cv2.COLOR_BGR2RGB), (FACE, FACE))
+    if image_rgb is None:
         image_rgb = np.random.randint(0, 255, (FACE, FACE, 3), dtype=np.uint8)
-        print("NOTE: no --image given; MediaPipe will likely miss the synthetic face "
-              "(the stage is still timed). Pass a real face photo for realistic numbers.")
+        print("NOTE: using a synthetic image; MediaPipe will likely miss the face "
+              "(the stage is still timed). Upload a real face photo for realistic numbers.")
 
     face_mesh = mp.solutions.face_mesh.FaceMesh(static_image_mode=False, max_num_faces=1)
     linspace = np.linspace(0, FACE, N_NODES)
