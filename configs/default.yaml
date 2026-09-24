@@ -1,0 +1,60 @@
+# RAGFAS default configuration (paper Sec. 3 / Sec. 4.1 implementation details).
+# Protocol configs under configs/protocols/ only override data/output paths.
+
+protocol: custom
+
+data:
+  train_list: ""                # text file with one graph .pt path per line
+  test_list: ""
+  landmark_colors: null         # null -> <repo>/assets/landmark_colors.npy
+  num_workers: 4
+  pin_memory: true
+
+model:
+  hidden_channels: 128          # node embeddings k' = 128 (Sec. 4.1)
+  cheb_order: 2                 # Chebyshev polynomial order 2 (Sec. 3.2)
+  in_channels: null             # null -> from dataset (640, D121-LowFE)
+  num_domains: null             # null -> auto-detected from the train list
+  classifier:                   # Sec. 3.3: 128 tokens x 4 levels, embed 8, 8 heads
+    tokens: 128
+    levels: 4
+    embed_dim: 8
+    num_layers: 5
+    num_heads: 8
+  region_head:                  # Sec. 3.5 RPN: embed 64, 10 layers, 8 heads, 7 regions
+    embed_dim: 64
+    num_layers: 10
+    num_heads: 8
+    num_classes: 7
+    num_samples: 64             # 64 of 468 nodes sampled per batch
+    conv: cheb                  # cheb (paper text) | sage (legacy checkpoints)
+  discriminator:                # Sec. 3.4, Eq. 6-7
+    pooling: node               # node (paper) | graph (legacy) | global_mlp (Table 3)
+  dropnode:                     # Sec. 3.2/4.1: DropNode p = 0.3
+    prob: 0.3
+    first_two_blocks: false     # paper: zero in the first two blocks
+    enable_prob: 0.5            # per-batch Bernoulli gate (legacy behaviour)
+  grl:                          # Sec. 3.4 schedule lambda = 2/(1+exp(-a*i/N)) - 1
+    alpha: 10.0
+    max_iter: 4000
+    max_coeff: 1.0
+
+train:
+  seed: 1378
+  epochs: 500                   # Sec. 4.1: trained for 500 epochs
+  batch_size: 64
+  lr: 1.0e-4                    # Adam, Sec. 4.1
+  lr_step: 500
+  lr_gamma: 0.5
+  w_cls: 1.0                    # unweighted sum L_Total = L_Cls + L_Adv + L_Self
+  w_adv: 1.0
+  w_self: 1.0
+  focal_gamma: 2.0
+  resume: true
+  selection_metric: person_auc  # best-model criterion of the original runs
+  log_every: 200
+  device: auto
+
+output:
+  dir: runs/run
+  save_scores: true

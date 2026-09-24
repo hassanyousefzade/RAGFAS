@@ -1,0 +1,29 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+
+# Experiment outputs
+runs/
+Scores/
+checkpoints/
+logs/
+*.log
+*.csv
+
+# Data
+data/
+*.pt
+*.npy
+!assets/landmark_colors.npy
+
+# Environments
+.env
+.venv
+env/
+venv/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

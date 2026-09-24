@@ -1,0 +1,55 @@
+# OCI_to_M protocol (paper Tables 1-2): train on O+C+I -> test on M.
+# Set data.train_list / data.test_list to your own list files.
+protocol: OCI_to_M
+data:
+  train_list: data/lists/graph_train_OCI.txt
+  test_list: data/lists/graph_test_M.txt
+  landmark_colors: null
+  num_workers: 4
+  pin_memory: true
+model:
+  hidden_channels: 128
+  cheb_order: 2
+  in_channels: null
+  num_domains: null
+  classifier:
+    tokens: 128
+    levels: 4
+    embed_dim: 8
+    num_layers: 5
+    num_heads: 8
+  region_head:
+    embed_dim: 64
+    num_layers: 10
+    num_heads: 8
+    num_classes: 7
+    num_samples: 64
+    conv: cheb
+  discriminator:
+    pooling: node
+  dropnode:
+    prob: 0.3
+    first_two_blocks: false
+    enable_prob: 0.5
+  grl:
+    alpha: 10.0
+    max_iter: 4000
+    max_coeff: 1.0
+train:
+  seed: 1378
+  epochs: 500
+  batch_size: 64
+  lr: 0.0001
+  lr_step: 500
+  lr_gamma: 0.5
+  w_cls: 1.0
+  w_adv: 1.0
+  w_self: 1.0
+  focal_gamma: 2.0
+  resume: true
+  selection_metric: person_auc
+  log_every: 200
+  device: auto
+output:
+  dir: runs/OCI_to_M
+  save_scores: true

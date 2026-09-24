@@ -1,0 +1,15 @@
+# Core (training / evaluation)
+torch>=2.0
+torchvision>=0.15
+torch_geometric>=2.3
+numpy
+pandas
+scikit-learn
+pyyaml
+tqdm
+
+# FGRE preprocessing (tools/crop_faces.py, tools/build_graphs.py)
+opencv-python
+mediapipe
+pillow
+matplotlib
