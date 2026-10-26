@@ -147,11 +147,4 @@ training from the originally released checkpoints bit-exactly.
 
 ## Citation
 
-```bibtex
-@inproceedings{yousefzade2027ragfas,
-  title     = {Region-Aware Generalized Face Anti-Spoofing},
-  author    = {Yousefzade, Hassan and Akhavanpour, Alireza and Farajian, Majid and Sabokrou, Mohammad},
-  booktitle = {IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
-  year      = {2027}
-}
-```
+
