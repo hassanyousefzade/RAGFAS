@@ -1,6 +1,6 @@
 # RAGFAS — Region-Aware Generalized Face Anti-Spoofing
 
-Official PyTorch implementation of the ICASSP 2027 paper
+Official PyTorch implementation of the paper
 **"Region-Aware Generalized Face Anti-Spoofing"**
 (H. Yousefzade, A. Akhavanpour, M. Farajian, M. Sabokrou).
 
